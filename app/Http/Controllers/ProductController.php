@@ -15,13 +15,25 @@ class ProductController extends Controller
             $request->validate([
                'p_name'=> 'required|max:20 ',
                'p_description'=> 'required|max:30 ',
-               'image'=> 'required|max:10 ',
+               'image'=> 'required',
 
             ]);
+
+
             $product = new Product;
+            if ($request->hasFile('image')){
+                $file = $request->file('image');
+                $allowedfileExtention = ['pdf','jpg','png'];
+                $extention = $file->getClientOriginalExtension();
+                $check = in_array($extention, $allowedfileExtention);
+                if ($check){
+                    $name = time() .$file->GetClientOriginalName();
+                    $file->move('images', $name);
+                    $product->image =$name;
+                }
+            }
             $product->p_name = $request->p_name;
             $product->p_description = $request->p_description;
-            $product->image = $request->image;
             $product->save();
             return response()->json(['message'=> 'Product added successfully'], 200);
 
@@ -40,16 +52,27 @@ class ProductController extends Controller
             $request->validate([
                 'p_name' => 'required|max:20 ',
                 'p_description' => 'required|max:30 ',
-                'image' => 'required|max:10 ',
+                'image' => 'required',
 
             ]);
             $product = Product::find($id);
+            if ($request->hasFile('image')){
+                $file = $request->file('image');
+                $allowedfileExtention = ['pdf','jpg','png'];
+                $extention = $file->getClientOriginalExtension();
+                $check = in_array($extention, $allowedfileExtention);
+                if ($check){
+                    $name = time() .$file->getClientOriginalName();
+                    $file->move('images', $name);
+                    $product->image =$name;
+                }
+            }
             if ($product) {
                 $product->p_name = $request->p_name;
                 $product->p_description = $request->p_description;
                 $product->image = $request->image;
                 $product->update();
-                return response()->json(['message' => 'Product updated5 successfully'], 200);
+                return response()->json(['message' => 'Product updated successfully'], 200);
 
             } else {
                 return response()->json(['message' => 'Product not update'], 404);

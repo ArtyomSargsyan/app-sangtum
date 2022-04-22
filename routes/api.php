@@ -1,8 +1,8 @@
 <?php
 
 use App\Http\Controllers\API\AuthController;
-use App\Http\Controllers\ProductController;
-use Illuminate\Http\Request;
+use App\Http\Controllers\API\ProductController;
+use App\Http\Controllers\API\CategoryController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -25,4 +25,17 @@ Route::middleware('auth:sanctum')->group(function(){
     Route::post('product/add', [ProductController::class, 'store']);
     Route::put('product/{id}/update', [ProductController::class, 'update']);
     Route::delete('product/{id}/delete', [ProductController::class, 'destroy']);
+
 });
+
+Route::controller(CategoryController::class)->group(function(){
+    Route::get('categories', 'getAllCategory');
+    Route::post('categories/add', 'store');
+    Route::put('categories/{id}/update', 'update');
+    Route::delete('categories/{id}/delete',  'delete' );
+    Route::get('categories/{id}/show',  'show');
+});
+
+
+
+

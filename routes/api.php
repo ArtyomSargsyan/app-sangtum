@@ -4,6 +4,7 @@
 use App\Http\Controllers\API\Auth\AuthController;
 use App\Http\Controllers\API\ProductController;
 use App\Http\Controllers\API\CategoryController;
+use App\Http\Controllers\SendMailController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -36,6 +37,8 @@ Route::controller(CategoryController::class)->group(function(){
     Route::delete('categories/{id}/delete',  'delete' );
     Route::get('categories/{id}/show',  'show');
 });
+
+Route::post('product/send', [SendMailController::class, 'send']);
 
 
 

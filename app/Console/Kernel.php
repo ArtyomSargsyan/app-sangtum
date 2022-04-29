@@ -2,8 +2,11 @@
 
 namespace App\Console;
 
+use App\Console\Commands\SendProductEmail;
+use App\Console\Commands\SendSummary;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
+use Psy\Command\Command;
 
 class Kernel extends ConsoleKernel
 {
@@ -13,6 +16,12 @@ class Kernel extends ConsoleKernel
      * @param  \Illuminate\Console\Scheduling\Schedule  $schedule
      * @return void
      */
+/*    protected $commands =  array(
+
+        SendProductEmail::class,
+        SendSummary::class
+    );*/
+
     protected function schedule(Schedule $schedule)
     {
         // $schedule->command('inspire')->hourly();

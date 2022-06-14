@@ -2,8 +2,9 @@
 
 namespace App\Providers;
 
-use App\Repository\Post\Productinterface;
-use App\Repository\Post\PostRepository;
+use App\Contracts\Video\VideoHosting;
+use App\Services\Video\Vimeo;
+use App\Services\Video\Youtube;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -15,7 +16,11 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        //
+        /*$serviceVimeo = new Vimeo();
+        $this->app->instance(VideoHosting::class, $serviceVimeo);*/
+      /*  $this->app->bind(VideoHosting::class, function ($app){
+            return new Vimeo();
+        });*/
     }
 
     /**
@@ -25,6 +30,6 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        $this->app->bind(Productinterface::class,PostRepository::class);
+       // $this->app->bind(Productinterface::class,PostRepository::class);
     }
 }

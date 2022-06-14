@@ -3,9 +3,13 @@
 namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\ProductRequest;
+use App\Jobs\CreateProductJob;
 use App\Models\Product;
+use App\Models\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class  ProductController extends Controller
 {
@@ -23,35 +27,15 @@ class  ProductController extends Controller
     /**
      * Add product data
      *
-     * @param Request $request
+     * @param ProductRequest $request
      * @return JsonResponse
      */
-    public function store(Request $request)
+    public function store(Request $request): JsonResponse
     {
-        $request->validate([
-            "name" => "required|max:20 ",
-            "description" => "required|max:30 ",
-            "image" => "required",
-        ]);
-        $product = new Product();
-        if ($request->hasFile("image")) {
-            $file = $request->file("image");
-            $allowedfileExtention = ["pdf", "jpg", "png"];
-            $extention = $file->getClientOriginalExtension();
-            $check = in_array($extention, $allowedfileExtention);
-            if ($check) {
-                $name = time() . $file->GetClientOriginalName();
-                $file->move("images", $name);
-                $product->image = $name;
-            }
-        }
-        $product->name = $request->name;
-        $product->description = $request->description;
-        $product->save();
-        return response()->json(
-            ["message" => "Product added successfully"],
-            200
-        );
+        $userId = Auth::id();
+        CreateProductJob::dispatch($request->name ,$request->description,$request->price,$userId);
+        return response()->json(['message'=>'send message job wait for reply'],201);
+
     }
 
     /**
@@ -60,14 +44,9 @@ class  ProductController extends Controller
      * @param $id
      * @return JsonResponse
      */
-    public function show($id)
+    public function show()
     {
-        $products = Product::find($id);
-        if ($products) {
-            return response()->json(["products" => $products], 200);
-        } else {
-            return response()->json(["message" => "No record Found"], 400);
-        }
+        return User::where('id','=',5)->get();
     }
 
     /**

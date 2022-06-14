@@ -4,7 +4,6 @@ namespace App\Console\Commands;
 
 use App\Mail\ProductMail;
 use App\Models\Product;
-use Dflydev\DotAccessData\Data;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Validator;
@@ -37,17 +36,18 @@ class ProductSend extends Command
     {
 
         $emailStr = $this->option('email');
+
         $emailsArr = explode(',', $emailStr);
+
 
         $product = Product::find(1);
 
         foreach ($emailsArr as $value) {
 
             $validator = Validator::make(['email' => $value], [
-                'email' => 'required|regex:/(.+)@(.+)\.(.+)/i'
+                'email' => 'required|email'
             ]);
 
-             // dd($value);
             if ($validator->validate()) {
                 Mail::to($value)->send(new ProductMail ($product));
             }

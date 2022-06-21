@@ -4,12 +4,13 @@ namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\ProductRequest;
-use App\Jobs\CreateProductJob;
 use App\Models\Product;
 use App\Models\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
+
 
 class  ProductController extends Controller
 {
@@ -24,29 +25,38 @@ class  ProductController extends Controller
         return response()->json(["products" => $products], 200);
     }
 
+
     /**
-     * Add product data
-     *
      * @param ProductRequest $request
      * @return JsonResponse
      */
-    public function store(Request $request): JsonResponse
+    public function store(ProductRequest $request)
     {
-        $userId = Auth::id();
-        CreateProductJob::dispatch($request->name ,$request->description,$request->price,$userId);
-        return response()->json(['message'=>'send message job wait for reply'],201);
+        $path = Storage::putFile('public', $request->file('image'));
+        $date = $request->validated();
 
+        Product::create([
+            'name' => $date['name'],
+            'description' => $date['description'],
+            'price' => $date['price'],
+            'image' => $path
+        ]);
+
+        $url = DB::table('products')->latest()->first();
+        $img = Storage::url($url->image);
+
+        return response()->json(['success' => 'product created successfully', $img, $url->name, $url->price, $url->description]);
     }
+
 
     /**
      * Show product
      *
-     * @param $id
      * @return JsonResponse
      */
     public function show()
     {
-        return User::where('id','=',5)->get();
+        return User::where('id', '=', 5)->get();
     }
 
     /**

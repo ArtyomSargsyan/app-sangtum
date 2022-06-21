@@ -5,6 +5,7 @@ use App\Http\Controllers\API\Auth\AuthController;
 use App\Http\Controllers\API\ProductController;
 use App\Http\Controllers\API\CategoryController;
 use App\Http\Controllers\EventController;
+use App\Http\Controllers\FileUploadController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -24,12 +25,14 @@ Route::middleware('auth:sanctum')->group(function(){
     Route::post('logout', [AuthController::class, 'logout']);
     Route::get('product/{id}/show', [ProductController::class, 'show']);
     Route::get('/products', [ProductController::class, 'index']);
-    Route::post('product/add', [ProductController::class, 'store']);
+
+
+
+
+
     Route::put('product/{id}/update', [ProductController::class, 'update']);
     Route::delete('product/{id}/delete', [ProductController::class, 'destroy']);
     Route::post('sends', [EventController::class, 'index']);
-
-
 
 });
 
@@ -41,8 +44,12 @@ Route::controller(CategoryController::class)->group(function(){
     Route::get('categories/{id}/show',  'show');
 });
 
+Route::post('product', [ProductController::class, 'store']);
+Route::get('image',[ProductController::class,'store']);
 
 
+//Route::get('image/{path}', [FileUploadController::class, 'getImage'])->where('path', '.*');
+Route::post('images', [FileUploadController::class, 'uploadImage']);
 
 
 
